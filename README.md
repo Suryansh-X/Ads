@@ -4,19 +4,12 @@
 
 ## 🏪 Store Details
 - **Name:** Vijay Electronics
-- **Location:** Railway Road, Mukerian, Punjab – 144211
-- **Contact:** +91 9876898832
-- **UPI:** 9915649068.eazypay@icici
+- **Location:** Mukerian 
 
 ## 🚀 How to Deploy on GitHub Pages
 1. Upload all files to a GitHub repository
 2. Go to **Settings → Pages → Source: main branch / root**
 3. Your store goes live at `https://yourusername.github.io/vijay-electronics/`
-
-## 🔐 Admin Panel
-- URL: `/pages/admin-login.html`
-- Password: `vijay@admin2024`
-- **Change password** in `assets/js/store.js` → `adminPassword` field
 
 ## ✨ Features
 - 🛍️ Full product catalog with search & category filter
