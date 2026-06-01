@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart & Checkout – Vijay Electronics, Mukerian</title>
+  <meta name="description" content="Checkout at Vijay Electronics Mukerian. Pay via UPI, GPay, PhonePe, Paytm." />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <style>
+    .checkout-layout { max-width: 1100px; margin: 0 auto; padding: 40px 20px; display: grid; grid-template-columns: 1fr 420px; gap: 32px; }
+    .checkout-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); overflow: hidden; }
+    .checkout-card-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 10px; }
+    .checkout-card-header h2 { font-size: 20px; font-family: Rajdhani, sans-serif; }
+    .checkout-card-body { padding: 24px; }
+    .order-summary-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+    .order-summary-row:last-child { border-bottom: none; }
+    .order-total-row { display: flex; justify-content: space-between; padding: 14px 0; font-size: 20px; font-weight: 800; color: #e63312; font-family: Rajdhani, sans-serif; }
+    .step-indicator { display: flex; align-items: center; gap: 0; margin-bottom: 32px; }
+    .step { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
+    .step.active .step-num { background: #e63312; color: #fff; }
+    .step.done .step-num { background: #10b981; color: #fff; }
+    .step.pending .step-num { background: #e5e7eb; color: #9ca3af; }
+    .step-line { flex: 1; height: 2px; background: #e5e7eb; margin: 0 8px; }
+    .step-line.done { background: #10b981; }
+    .empty-cart { text-align: center; padding: 80px 20px; }
+    .empty-cart .icon { font-size: 64px; margin-bottom: 16px; }
+    @media (max-width: 768px) { .checkout-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="ve-topbar">
+  <a href="tel:+919876898832">📞 +91 9876898832</a>
+  <span>|</span>
+  <span>📍 Railway Road, Mukerian, Punjab</span>
+</div>
+<header class="ve-header">
+  <nav class="ve-navbar">
+    <a href="../index.html" class="ve-logo">
+      <div class="ve-logo-icon">⚡</div>
+      <div class="ve-logo-text">
+        <strong>Vijay Electronics</strong>
+        <span>MUKERIAN • EST. 2005</span>
+      </div>
+    </a>
+    <div class="ve-nav-actions" style="margin-left:auto">
+      <a href="../index.html" class="ve-nav-btn"><span class="icon">🏠</span><span>Home</span></a>
+      <a href="cart.html" class="ve-nav-btn">
+        <span class="icon">🛒</span><span>Cart</span>
+        <div class="cart-count" id="cartCount" style="display:none">0</div>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<div style="background:#f8f9fa;min-height:calc(100vh - 130px);">
+
+  <!-- STEP INDICATOR -->
+  <div style="max-width:1100px;margin:0 auto;padding:28px 20px 0">
+    <div class="step-indicator" id="stepIndicator">
+      <div class="step active" id="step1"><div class="step-num">1</div><span>Cart</span></div>
+      <div class="step-line" id="line1"></div>
+      <div class="step pending" id="step2"><div class="step-num">2</div><span>Details</span></div>
+      <div class="step-line" id="line2"></div>
+      <div class="step pending" id="step3"><div class="step-num">3</div><span>Payment</span></div>
+      <div class="step-line" id="line3"></div>
+      <div class="step pending" id="step4"><div class="step-num">4</div><span>Confirm</span></div>
+    </div>
+  </div>
+
+  <!-- STEP 1: CART -->
+  <div id="pageCart" class="checkout-layout">
+    <div class="checkout-card">
+      <div class="checkout-card-header">
+        <span style="font-size:22px">🛒</span>
+        <h2>Your Cart</h2>
+        <span id="cartItemCount" style="background:#e63312;color:#fff;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-left:auto"></span>
+      </div>
+      <div class="checkout-card-body" id="cartItemsContainer">
+        <!-- Cart items rendered here -->
+      </div>
+    </div>
+
+    <div>
+      <div class="checkout-card" style="margin-bottom:20px">
+        <div class="checkout-card-header"><span style="font-size:20px">🧾</span><h2>Order Summary</h2></div>
+        <div class="checkout-card-body" id="cartSummary"></div>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;font-size:16px" id="proceedBtn" onclick="goToStep(2)">
+        Proceed to Checkout →
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2: CUSTOMER DETAILS -->
+  <div id="pageDetails" style="display:none" class="checkout-layout">
+    <div class="checkout-card">
+      <div class="checkout-card-header"><span style="font-size:22px">👤</span><h2>Customer Details</h2></div>
+      <div class="checkout-card-body">
+        <div class="ve-form-row">
+          <div class="ve-form-group">
+            <label>Full Name *</label>
+            <input type="text" id="custName" placeholder="Your full name" required />
+          </div>
+          <div class="ve-form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="custPhone" placeholder="+91 XXXXX XXXXX" maxlength="13" required />
+          </div>
+        </div>
+        <div class="ve-form-group">
+          <label>Complete Address *</label>
+          <input type="text" id="custAddress" placeholder="House/Shop No., Street, Locality" required />
+        </div>
+        <div class="ve-form-row">
+          <div class="ve-form-group">
+            <label>City / Town *</label>
+            <input type="text" id="custCity" placeholder="e.g. Mukerian" required />
+          </div>
+          <div class="ve-form-group">
+            <label>Pin Code *</label>
+            <input type="text" id="custPin" placeholder="e.g. 144211" maxlength="6" required />
+          </div>
+        </div>
+        <div class="ve-form-group">
+          <label>State</label>
+          <input type="text" id="custState" placeholder="Punjab" value="Punjab" />
+        </div>
+        <div class="ve-form-group">
+          <label>Order Notes (Optional)</label>
+          <input type="text" id="custNotes" placeholder="Delivery instructions or special requests" />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="checkout-card" style="margin-bottom:20px">
+        <div class="checkout-card-header"><span style="font-size:20px">🧾</span><h2>Order Summary</h2></div>
+        <div class="checkout-card-body" id="detailsSummary"></div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button class="btn-outline" style="color:#1a1a2e;border-color:#1a1a2e;flex:1;justify-content:center" onclick="goToStep(1)">← Back</button>
+        <button class="btn-primary" style="flex:2;justify-content:center;font-size:16px" onclick="goToStep(3)">Continue to Payment →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: PAYMENT -->
+  <div id="pagePayment" style="display:none" class="checkout-layout">
+    <div class="checkout-card">
+      <div class="checkout-card-header"><span style="font-size:22px">💳</span><h2>Payment</h2></div>
+      <div class="checkout-card-body">
+
+        <div style="background:#fff7ed;border:2px solid #fed7aa;border-radius:12px;padding:20px;margin-bottom:24px">
+          <h4 style="color:#ea580c;margin-bottom:8px">⚡ Instant UPI Payment</h4>
+          <p style="font-size:14px;color:#7c3aed;font-weight:700">Pay to: 9915649068.eazypay@icici</p>
+          <p style="font-size:13px;color:#6b7280;margin-top:4px">Click the button below — your UPI app opens automatically with the amount pre-filled.</p>
+        </div>
+
+        <div class="upi-pay-section">
+          <h3>💸 Pay via UPI</h3>
+          <p>Amount will be pre-filled. Choose your preferred UPI app.</p>
+          <div class="upi-logos">
+            <span class="upi-logo-pill">📱 GPay</span>
+            <span class="upi-logo-pill">📱 PhonePe</span>
+            <span class="upi-logo-pill">📱 Paytm</span>
+            <span class="upi-logo-pill">📱 BHIM</span>
+            <span class="upi-logo-pill">📱 Amazon Pay</span>
+          </div>
+          <div style="font-size:28px;font-weight:900;color:#fff;margin-bottom:16px;font-family:Rajdhani,sans-serif" id="payAmountDisplay">₹0</div>
+          <button class="btn-upi" id="payNowBtn" onclick="initiateUPIPayment()">
+            💳 PAY NOW via UPI
+          </button>
+          <p style="font-size:12px;opacity:0.5;margin-top:12px">Secure • Instant • No extra charges</p>
+        </div>
+
+        <div style="background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;padding:20px;margin-top:20px">
+          <h4 style="color:#15803d;margin-bottom:8px">✅ After Payment</h4>
+          <p style="font-size:14px;color:#374151;line-height:1.6">
+            After completing payment, click <strong>"I've Paid – Confirm Order"</strong> below.<br>
+            Your order details will be sent to us on <strong>WhatsApp</strong> instantly! 📲
+          </p>
+        </div>
+
+        <div style="margin-top:24px;display:flex;gap:12px">
+          <button class="btn-outline" style="color:#1a1a2e;border-color:#1a1a2e;flex:1;justify-content:center" onclick="goToStep(2)">← Back</button>
+          <button class="btn-primary" style="background:#25d366;flex:2;justify-content:center;font-size:15px;box-shadow:0 6px 24px rgba(37,211,102,0.4)" onclick="confirmOrder()">
+            ✅ I've Paid – Confirm Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="checkout-card">
+        <div class="checkout-card-header"><span style="font-size:20px">🧾</span><h2>Order Summary</h2></div>
+        <div class="checkout-card-body" id="paymentSummary"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: CONFIRMATION -->
+  <div id="pageConfirm" style="display:none;padding:40px 20px">
+    <div style="max-width:680px;margin:0 auto;text-align:center">
+      <div class="checkout-card">
+        <div class="checkout-card-body" style="padding:48px 32px">
+          <div style="font-size:72px;margin-bottom:16px">🎉</div>
+          <h2 style="font-size:28px;color:#10b981;margin-bottom:8px">Order Confirmed!</h2>
+          <p style="color:#6b7280;font-size:15px;margin-bottom:24px">
+            Thank you for shopping at <strong>Vijay Electronics, Mukerian</strong>!<br>
+            Your order has been received.
+          </p>
+
+          <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:24px;text-align:left">
+            <div style="font-size:13px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:12px">Order Details</div>
+            <div id="confirmOrderId" style="font-size:18px;font-weight:800;color:#1a1a2e;font-family:Rajdhani,sans-serif;margin-bottom:8px"></div>
+            <div id="confirmCustomer" style="font-size:14px;line-height:1.8;color:#374151"></div>
+          </div>
+
+          <div style="background:#fffbeb;border-radius:12px;padding:20px;margin-bottom:24px">
+            <div style="font-size:20px;margin-bottom:8px">📲</div>
+            <p style="font-size:14px;color:#374151;line-height:1.6">
+              Your order message has been sent to us on <strong>WhatsApp</strong>.<br>
+              We'll call you at <strong id="confirmPhone"></strong> to confirm delivery details.
+            </p>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <button class="btn-primary" style="justify-content:center;background:#25d366;box-shadow:0 6px 24px rgba(37,211,102,0.4)" onclick="sendWhatsApp()">
+              📲 Resend Order on WhatsApp
+            </button>
+            <button class="btn-primary" style="justify-content:center" onclick="printInvoice()">
+              🧾 Download Invoice
+            </button>
+            <a href="../index.html" class="btn-outline" style="justify-content:center;color:#1a1a2e;border-color:#1a1a2e">
+              🏠 Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end bg -->
+
+<!-- FOOTER -->
+<footer style="background:#0a0a14;color:#9ca3af;text-align:center;padding:20px;font-size:13px">
+  © 2024 Vijay Electronics, Railway Road, Mukerian · +91 9876898832
+</footer>
+
+<script src="../assets/js/store.js"></script>
+<script>
+  const WA_NUMBER = "919876898832"; // WhatsApp number (no + sign)
+  let currentStep = 1;
+  let pendingOrder = null;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartBadge();
+    renderCartStep();
+  });
+
+  // ── STEP NAVIGATION ───────────────────────────────────────────────────────
+  function goToStep(n) {
+    if (n === 2 && !validateStep1()) return;
+    if (n === 3 && !validateStep2()) return;
+
+    currentStep = n;
+    ["pageCart","pageDetails","pagePayment","pageConfirm"].forEach((id, i) => {
+      document.getElementById(id).style.display = (i+1 === n) ? (n===4?"block":"grid") : "none";
+    });
+
+    // Update step indicator
+    [1,2,3,4].forEach(i => {
+      const s = document.getElementById("step"+i);
+      s.className = "step " + (i < n ? "done" : i === n ? "active" : "pending");
+    });
+    [1,2,3].forEach(i => {
+      const l = document.getElementById("line"+i);
+      if (l) l.className = "step-line" + (i < n ? " done" : "");
+    });
+
+    if (n === 3) buildOrderPreview();
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+
+  // ── STEP 1 – CART ─────────────────────────────────────────────────────────
+  function renderCartStep() {
+    const cart = getCart();
+    const products = getProducts();
+    const container = document.getElementById("cartItemsContainer");
+
+    if (!cart.length) {
+      container.innerHTML = `
+        <div class="empty-cart">
+          <div class="icon">🛒</div>
+          <h3 style="margin-bottom:12px">Your cart is empty</h3>
+          <p style="color:#6b7280;margin-bottom:24px">Browse our products and add items to your cart.</p>
+          <a href="../index.html" class="btn-primary" style="display:inline-flex">🛍️ Shop Now</a>
+        </div>`;
+      document.getElementById("proceedBtn").disabled = true;
+      document.getElementById("proceedBtn").style.opacity = "0.5";
+      document.getElementById("cartSummary").innerHTML = "";
+      document.getElementById("cartItemCount").textContent = "0 items";
+      return;
+    }
+
+    let html = "";
+    let subtotal = 0;
+    cart.forEach(item => {
+      const p = products.find(x => x.id === item.id);
+      if (!p) return;
+      const itemTotal = p.price * item.qty;
+      subtotal += itemTotal;
+      html += `
+        <div class="ve-cart-item" id="cartItem_${p.id}">
+          <img src="${p.image}" alt="${p.name}" />
+          <div class="ve-cart-item-info">
+            <div class="ve-cart-item-name">${p.name}</div>
+            <div style="font-size:12px;color:#9ca3af;margin-bottom:6px">${p.category}</div>
+            <div class="ve-cart-item-price">${formatPrice(itemTotal)}</div>
+            <div class="ve-qty-ctrl">
+              <button class="ve-qty-btn" onclick="changeQty('${p.id}', -1)">−</button>
+              <span style="font-weight:700;min-width:24px;text-align:center">${item.qty}</span>
+              <button class="ve-qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
+              <span style="font-size:12px;color:#9ca3af;margin-left:8px">× ${formatPrice(p.price)} each</span>
+            </div>
+          </div>
+          <button class="ve-cart-remove" onclick="removeItem('${p.id}')" title="Remove">🗑️</button>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+    document.getElementById("cartItemCount").textContent = `${cart.reduce((s,i)=>s+i.qty,0)} items`;
+    renderSummaryBox("cartSummary", subtotal);
+  }
+
+  function renderSummaryBox(containerId, subtotal) {
+    const delivery = subtotal >= 999 ? 0 : 99;
+    const total = subtotal + delivery;
+    document.getElementById(containerId).innerHTML = `
+      <div class="order-summary-row"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>
+      <div class="order-summary-row"><span>Delivery</span><span>${delivery === 0 ? '<span style="color:#10b981;font-weight:700">FREE</span>' : formatPrice(delivery)}</span></div>
+      <div class="order-summary-row"><span style="font-size:12px;color:#9ca3af">GST (incl. in price)</span><span style="font-size:12px;color:#9ca3af">Included</span></div>
+      <div class="order-total-row"><span>TOTAL</span><span>${formatPrice(total)}</span></div>
+    `;
+    // Update payment step amount display
+    const disp = document.getElementById("payAmountDisplay");
+    if (disp) disp.textContent = formatPrice(total);
+  }
+
+  function changeQty(id, delta) {
+    const cart = getCart();
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart(cart);
+    renderCartStep();
+  }
+
+  function removeItem(id) {
+    const cart = getCart().filter(i => i.id !== id);
+    saveCart(cart);
+    renderCartStep();
+    showToast("Item removed from cart");
+  }
+
+  function validateStep1() {
+    const cart = getCart();
+    if (!cart.length) { showToast("Your cart is empty!", "error"); return false; }
+    return true;
+  }
+
+  // ── STEP 2 – DETAILS ──────────────────────────────────────────────────────
+  function validateStep2() {
+    const name = document.getElementById("custName").value.trim();
+    const phone = document.getElementById("custPhone").value.trim();
+    const addr = document.getElementById("custAddress").value.trim();
+    const city = document.getElementById("custCity").value.trim();
+    const pin = document.getElementById("custPin").value.trim();
+
+    if (!name) { showToast("Please enter your name", "error"); document.getElementById("custName").focus(); return false; }
+    if (!phone || phone.replace(/\D/g,"").length < 10) { showToast("Please enter a valid mobile number", "error"); document.getElementById("custPhone").focus(); return false; }
+    if (!addr) { showToast("Please enter your address", "error"); document.getElementById("custAddress").focus(); return false; }
+    if (!city) { showToast("Please enter your city", "error"); document.getElementById("custCity").focus(); return false; }
+    if (!pin || pin.length < 6) { showToast("Please enter a valid 6-digit pin code", "error"); document.getElementById("custPin").focus(); return false; }
+
+    // Build summary for next step
+    const subtotal = getCartSubtotal();
+    renderSummaryBox("detailsSummary", subtotal);
+    return true;
+  }
+
+  // ── STEP 3 – PAYMENT ──────────────────────────────────────────────────────
+  function buildOrderPreview() {
+    const subtotal = getCartSubtotal();
+    renderSummaryBox("paymentSummary", subtotal);
+    const total = subtotal + (subtotal >= 999 ? 0 : 99);
+    document.getElementById("payAmountDisplay").textContent = formatPrice(total);
+  }
+
+  function getCartSubtotal() {
+    const cart = getCart();
+    const products = getProducts();
+    return cart.reduce((s, item) => {
+      const p = products.find(x => x.id === item.id);
+      return s + (p ? p.price * item.qty : 0);
+    }, 0);
+  }
+
+  function initiateUPIPayment() {
+    const subtotal = getCartSubtotal();
+    const delivery = subtotal >= 999 ? 0 : 99;
+    const total = subtotal + delivery;
+    const upiId = "9915649068.eazypay@icici";
+    const name = document.getElementById("custName")?.value.trim() || "Customer";
+    const orderId = generateOrderId();
+
+    // Store pending order ID for confirmation
+    sessionStorage.setItem("pendingOrderId", orderId);
+
+    // UPI deep link — works on mobile to open any UPI app
+    const upiUrl = `upi://pay?pa=${upiId}&pn=Vijay+Electronics+Mukerian&am=${total}&cu=INR&tn=Order+${orderId}+from+${encodeURIComponent(name)}`;
+
+    // Try the deep link
+    window.location.href = upiUrl;
+
+    // Fallback: show instructions after a delay
+    setTimeout(() => {
+      showToast("✅ If app didn't open, scan QR or pay manually to: " + upiId, "error");
+    }, 2500);
+  }
+
+  // ── STEP 4 – CONFIRM ORDER ────────────────────────────────────────────────
+  function confirmOrder() {
+    const cart = getCart();
+    const products = getProducts();
+    const subtotal = getCartSubtotal();
+    const delivery = subtotal >= 999 ? 0 : 99;
+    const total = subtotal + delivery;
+
+    const name = document.getElementById("custName").value.trim();
+    const phone = document.getElementById("custPhone").value.trim();
+    const address = document.getElementById("custAddress").value.trim();
+    const city = document.getElementById("custCity").value.trim();
+    const pin = document.getElementById("custPin").value.trim();
+    const state = document.getElementById("custState").value.trim() || "Punjab";
+    const notes = document.getElementById("custNotes").value.trim();
+
+    const orderId = sessionStorage.getItem("pendingOrderId") || generateOrderId();
+    const orderDate = new Date().toLocaleString("en-IN", { dateStyle:"long", timeStyle:"short" });
+
+    // Build order items detail
+    const items = cart.map(item => {
+      const p = products.find(x => x.id === item.id);
+      return p ? { name: p.name, price: p.price, qty: item.qty, total: p.price * item.qty } : null;
+    }).filter(Boolean);
+
+    const order = {
+      id: orderId,
+      date: orderDate,
+      customer: { name, phone, address, city, pin, state, notes },
+      items,
+      subtotal,
+      delivery,
+      total,
+      status: "New Order",
+      paymentMethod: "UPI"
+    };
+
+    // Save order to localStorage
+    const orders = getOrders();
+    orders.unshift(order);
+    saveOrders(orders);
+
+    // Clear cart
+    saveCart([]);
+
+    // Store order for this session
+    sessionStorage.setItem("lastOrder", JSON.stringify(order));
+
+    // Update confirmation UI
+    document.getElementById("confirmOrderId").textContent = `Order ID: ${orderId}`;
+    document.getElementById("confirmPhone").textContent = phone;
+    document.getElementById("confirmCustomer").innerHTML = `
+      <strong>${name}</strong><br>
+      ${address}, ${city} – ${pin}, ${state}<br>
+      📞 ${phone}<br>
+      💰 Total Paid: <strong style="color:#e63312">${formatPrice(total)}</strong><br>
+      📅 ${orderDate}
+    `;
+
+    goToStep(4);
+
+    // Auto-open WhatsApp IMMEDIATELY after confirmation
+    setTimeout(() => sendWhatsApp(), 600);
+  }
+
+  // ── WHATSAPP SEND ─────────────────────────────────────────────────────────
+  function sendWhatsApp() {
+    const order = JSON.parse(sessionStorage.getItem("lastOrder") || "null");
+    if (!order) { showToast("No order found", "error"); return; }
+
+    const itemsText = order.items.map(i =>
+      `  • ${i.name} × ${i.qty} = ${formatPrice(i.total)}`
+    ).join("\n");
+
+    const msg =
+`🛒 *NEW ORDER – Vijay Electronics, Mukerian*
+━━━━━━━━━━━━━━━━━━━━━
+🆔 *Order ID:* ${order.id}
+📅 *Date:* ${order.date}
+
+👤 *CUSTOMER DETAILS*
+• Name: ${order.customer.name}
+• Phone: ${order.customer.phone}
+• Address: ${order.customer.address}
+• City: ${order.customer.city} – ${order.customer.pin}
+• State: ${order.customer.state}
+${order.customer.notes ? `• Notes: ${order.customer.notes}` : ""}
+
+📦 *PRODUCTS ORDERED*
+${itemsText}
+
+━━━━━━━━━━━━━━━━━━━━━
+🏷️ Subtotal: ${formatPrice(order.subtotal)}
+🚚 Delivery: ${order.delivery === 0 ? "FREE" : formatPrice(order.delivery)}
+💰 *TOTAL PAID: ${formatPrice(order.total)}*
+💳 Payment: UPI (${order.paymentMethod})
+━━━━━━━━━━━━━━━━━━━━━
+📍 Vijay Electronics
+Railway Road, Mukerian, Punjab
+📞 +91 9876898832`;
+
+    const encoded = encodeURIComponent(msg);
+    const waUrl = `https://wa.me/${WA_NUMBER}?text=${encoded}`;
+    window.open(waUrl, "_blank");
+  }
+
+  // ── INVOICE PRINT ─────────────────────────────────────────────────────────
+  function printInvoice() {
+    const order = JSON.parse(sessionStorage.getItem("lastOrder") || "null");
+    if (!order) return;
+    sessionStorage.setItem("invoiceOrder", JSON.stringify(order));
+    window.open("invoice.html", "_blank");
+  }
+
+  window.addEventListener("productsUpdated", renderCartStep);
+</script>
+</body>
+</html>

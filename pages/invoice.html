@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice – Vijay Electronics</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    body { background: #f0f0f0; }
+    .invoice-page { padding: 40px 20px; }
+    .invoice-actions {
+      max-width: 800px; margin: 0 auto 20px;
+      display: flex; gap: 12px; justify-content: flex-end;
+    }
+    @media print {
+      .invoice-actions { display: none; }
+      body { background: #fff; }
+      .invoice-wrap { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="invoice-page">
+  <div class="invoice-actions">
+    <button class="btn-primary" onclick="window.print()" style="display:inline-flex">🖨️ Print / Save PDF</button>
+    <a href="cart.html" class="btn-outline" style="color:#1a1a2e;border-color:#1a1a2e;display:inline-flex">← Back</a>
+  </div>
+
+  <div class="invoice-wrap" id="invoiceContent">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const order = JSON.parse(sessionStorage.getItem("invoiceOrder") || sessionStorage.getItem("lastOrder") || "null");
+    if (!order) {
+      document.getElementById("invoiceContent").innerHTML = `<div style="text-align:center;padding:60px"><h2>No invoice found</h2><a href="../index.html">Go Home</a></div>`;
+      return;
+    }
+    renderInvoice(order);
+  });
+
+  function renderInvoice(o) {
+    const itemsHtml = o.items.map((item, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td><strong>${item.name}</strong></td>
+        <td style="text-align:center">${item.qty}</td>
+        <td style="text-align:right">${formatPrice(item.price)}</td>
+        <td style="text-align:right;font-weight:700">${formatPrice(item.total)}</td>
+      </tr>
+    `).join("");
+
+    document.getElementById("invoiceContent").innerHTML = `
+      <div class="invoice-header">
+        <div class="invoice-logo">
+          <h1>⚡ Vijay Electronics</h1>
+          <p>Railway Road, Mukerian, Punjab – 144211</p>
+          <p>📞 +91 9876898832</p>
+          <p>GSTIN: 03XXXXX0000X1Z5</p>
+        </div>
+        <div class="invoice-meta">
+          <h2>INVOICE</h2>
+          <p><strong>Invoice No:</strong> ${o.id}</p>
+          <p><strong>Date:</strong> ${o.date}</p>
+          <p><strong>Payment:</strong> UPI</p>
+        </div>
+      </div>
+
+      <div class="invoice-parties">
+        <div class="invoice-party">
+          <h4>Bill From</h4>
+          <p><strong>Vijay Electronics</strong><br>
+          Railway Road, Mukerian<br>
+          Punjab – 144211<br>
+          +91 9876898832</p>
+        </div>
+        <div class="invoice-party">
+          <h4>Bill To</h4>
+          <p><strong>${o.customer.name}</strong><br>
+          ${o.customer.address}<br>
+          ${o.customer.city} – ${o.customer.pin}<br>
+          ${o.customer.state}<br>
+          📞 ${o.customer.phone}</p>
+        </div>
+      </div>
+
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th style="text-align:center">Qty</th>
+            <th style="text-align:right">Unit Price</th>
+            <th style="text-align:right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>${itemsHtml}</tbody>
+      </table>
+
+      <div class="invoice-total">
+        <table>
+          <tr><td>Subtotal</td><td style="text-align:right;padding-left:40px">${formatPrice(o.subtotal)}</td></tr>
+          <tr><td>Delivery Charges</td><td style="text-align:right">${o.delivery === 0 ? "FREE" : formatPrice(o.delivery)}</td></tr>
+          <tr><td>GST (included)</td><td style="text-align:right">₹0.00</td></tr>
+          <tr style="border-top:2px solid #e5e7eb">
+            <td class="grand-total">TOTAL PAID</td>
+            <td class="grand-total" style="text-align:right">${formatPrice(o.total)}</td>
+          </tr>
+        </table>
+      </div>
+
+      ${o.customer.notes ? `<div style="margin-top:20px;padding:14px;background:#fffbeb;border-radius:8px;font-size:13px"><strong>Notes:</strong> ${o.customer.notes}</div>` : ""}
+
+      <div class="invoice-footer">
+        <p style="margin-bottom:8px">Thank you for shopping at <strong>Vijay Electronics, Mukerian</strong>!</p>
+        <p>This is a computer-generated invoice. For queries call: +91 9876898832</p>
+        <p style="margin-top:8px;color:#e63312;font-weight:700">⚡ Vijay Electronics – Your Trusted Electronics Partner Since 2005</p>
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>
