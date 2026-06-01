@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta Tags -->
+  <title>Vijay Electronics – Best Electronics in Mukerian | TV, AC, Fridge & More</title>
+  <meta name="description" content="Vijay Electronics – Your trusted electronics store in Mukerian, Punjab. Shop TVs, ACs, Refrigerators, Washing Machines & more at best prices. Located at Railway Road, Mukerian. Call: +91 9876898832" />
+  <meta name="keywords" content="Vijay Electronics, electronics in Mukerian, Mukerian electronics shop, TV Mukerian, AC Mukerian, refrigerator Mukerian, washing machine Mukerian, best electronics shop Punjab, Railway Road Mukerian, home appliances Mukerian, electronics store Hoshiarpur" />
+  <meta name="author" content="Vijay Electronics, Mukerian" />
+  <meta name="geo.region" content="IN-PB" />
+  <meta name="geo.placename" content="Mukerian, Punjab, India" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vijay Electronics – Best Electronics in Mukerian" />
+  <meta property="og:description" content="Shop TVs, ACs, Refrigerators and more at Vijay Electronics, Railway Road Mukerian." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vijayelectronics.in" />
+
+  <!-- Schema.org Local Business -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ElectronicsStore",
+    "name": "Vijay Electronics",
+    "image": "",
+    "description": "Trusted electronics store in Mukerian, Punjab",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Railway Road",
+      "addressLocality": "Mukerian",
+      "addressRegion": "Punjab",
+      "postalCode": "144211",
+      "addressCountry": "IN"
+    },
+    "telephone": "+91-9876898832",
+    "url": "https://vijayelectronics.in",
+    "openingHours": "Mo-Sa 09:00-21:00",
+    "priceRange": "₹₹"
+  }
+  </script>
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="ve-topbar">
+  <a href="tel:+919876898832">📞 +91 9876898832</a>
+  <span>|</span>
+  <a href="#">🚚 Free Delivery in Mukerian on orders above ₹999</a>
+  <span>|</span>
+  <a href="#">📍 Railway Road, Mukerian, Punjab</a>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="ve-header">
+  <nav class="ve-navbar">
+    <a href="index.html" class="ve-logo">
+      <div class="ve-logo-icon">⚡</div>
+      <div class="ve-logo-text">
+        <strong>Vijay Electronics</strong>
+        <span>MUKERIAN • EST. 2005</span>
+      </div>
+    </a>
+
+    <div class="ve-search" id="searchWrap">
+      <input type="text" id="searchInput" placeholder="Search TVs, ACs, Fridges, Washing Machines…" autocomplete="off" />
+      <button onclick="doSearch()">🔍</button>
+      <div class="search-results-dropdown" id="searchDropdown" style="display:none"></div>
+    </div>
+
+    <div class="ve-nav-actions">
+      <a href="pages/cart.html" class="ve-nav-btn">
+        <span class="icon">🛒</span>
+        <span>Cart</span>
+        <div class="cart-count" id="cartCount" style="display:none">0</div>
+      </a>
+      <a href="pages/admin.html" class="ve-nav-btn">
+        <span class="icon">🔐</span>
+        <span>Admin</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Category Nav -->
+  <div class="ve-catnav">
+    <div class="ve-catnav-inner" id="catNav">
+      <a href="#" class="ve-catlink active" onclick="filterCategory('all',this)">All Products</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Televisions',this)">📺 Televisions</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Air Conditioners',this)">❄️ Air Conditioners</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Refrigerators',this)">🧊 Refrigerators</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Washing Machines',this)">🫧 Washing Machines</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Audio',this)">🔊 Audio</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Kitchen Appliances',this)">🍳 Kitchen</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Heating & Cooling',this)">🌡️ Heating & Cooling</a>
+      <a href="#" class="ve-catlink" onclick="filterCategory('Water Heaters',this)">🚿 Water Heaters</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO BANNER ── -->
+<section class="ve-hero" id="heroSection">
+  <div class="ve-hero-inner">
+    <div class="ve-hero-content">
+      <span class="ve-hero-badge">🏪 Mukerian's #1 Electronics Store</span>
+      <h1>Power Up Your <span>Smart Home</span> With Latest Technology</h1>
+      <p>Trusted by thousands of families in Mukerian & Hoshiarpur for 20+ years. Best prices, genuine products, doorstep delivery.</p>
+      <div class="ve-hero-actions">
+        <a href="#products" class="btn-primary">🛍️ Shop Now</a>
+        <a href="tel:+919876898832" class="btn-outline">📞 Call Us</a>
+      </div>
+    </div>
+    <div class="ve-hero-visual">
+      <div class="ve-hero-3d">
+        <div class="ve-3d-ring"></div>
+        <div class="ve-3d-ring"></div>
+        <div class="ve-3d-ring"></div>
+        <div class="ve-hero-product-img">
+          <img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400&q=80" alt="Smart TV" id="heroImg" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="ve-stats">
+  <div class="ve-stats-inner">
+    <div class="ve-stat">
+      <div class="ve-stat-num">5000+</div>
+      <div class="ve-stat-label">Happy Customers</div>
+    </div>
+    <div class="ve-stat">
+      <div class="ve-stat-num">200+</div>
+      <div class="ve-stat-label">Products Available</div>
+    </div>
+    <div class="ve-stat">
+      <div class="ve-stat-num">20+</div>
+      <div class="ve-stat-label">Years of Trust</div>
+    </div>
+    <div class="ve-stat">
+      <div class="ve-stat-num">15+</div>
+      <div class="ve-stat-label">Top Brands</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CATEGORIES ── -->
+<section class="ve-section page-section" style="background:#fff;">
+  <div class="ve-section-inner">
+    <div class="ve-section-header">
+      <h2 class="ve-section-title">Shop By Category</h2>
+    </div>
+    <div class="ve-cat-grid">
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Televisions',null)">
+        <span class="ve-cat-icon">📺</span>
+        <div class="ve-cat-name">Televisions</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Air Conditioners',null)">
+        <span class="ve-cat-icon">❄️</span>
+        <div class="ve-cat-name">Air Conditioners</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Refrigerators',null)">
+        <span class="ve-cat-icon">🧊</span>
+        <div class="ve-cat-name">Refrigerators</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Washing Machines',null)">
+        <span class="ve-cat-icon">🫧</span>
+        <div class="ve-cat-name">Washing Machines</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Audio',null)">
+        <span class="ve-cat-icon">🔊</span>
+        <div class="ve-cat-name">Audio Systems</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Kitchen Appliances',null)">
+        <span class="ve-cat-icon">🍳</span>
+        <div class="ve-cat-name">Kitchen</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Heating & Cooling',null)">
+        <span class="ve-cat-icon">🌡️</span>
+        <div class="ve-cat-name">Heating & Cooling</div>
+      </a>
+      <a class="ve-cat-card" href="#" onclick="filterCategory('Water Heaters',null)">
+        <span class="ve-cat-icon">🚿</span>
+        <div class="ve-cat-name">Water Heaters</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCTS ── -->
+<section class="ve-section page-section" id="products">
+  <div class="ve-section-inner">
+    <div class="ve-section-header">
+      <h2 class="ve-section-title" id="productsTitle">All Products</h2>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <select id="sortSelect" onchange="sortProducts()" style="padding:8px 14px;border:2px solid #e5e7eb;border-radius:8px;font-family:Nunito,sans-serif;font-size:14px;font-weight:600;outline:none;">
+          <option value="default">Sort By</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="discount">Best Discount</option>
+        </select>
+      </div>
+    </div>
+    <div class="ve-products-grid" id="productsGrid">
+      <!-- Products rendered by JS -->
+    </div>
+    <div id="noProducts" style="display:none;text-align:center;padding:60px 20px;color:#9ca3af;">
+      <div style="font-size:48px;margin-bottom:16px;">🔍</div>
+      <h3>No products found</h3>
+      <p>Try a different category or search term</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="ve-features page-section">
+  <div class="ve-features-inner">
+    <div class="ve-feature">
+      <div class="ve-feature-icon">🚚</div>
+      <h4>Free Local Delivery</h4>
+      <p>Free delivery in Mukerian on orders above ₹999</p>
+    </div>
+    <div class="ve-feature">
+      <div class="ve-feature-icon">✅</div>
+      <h4>100% Genuine Products</h4>
+      <p>All products are original with manufacturer warranty</p>
+    </div>
+    <div class="ve-feature">
+      <div class="ve-feature-icon">🔧</div>
+      <h4>Free Installation</h4>
+      <p>Free installation for AC, TV & large appliances</p>
+    </div>
+    <div class="ve-feature">
+      <div class="ve-feature-icon">📞</div>
+      <h4>24/7 Support</h4>
+      <p>Call +91 9876898832 for any help anytime</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="ve-footer">
+  <div class="ve-footer-inner">
+    <div>
+      <div class="ve-footer-logo">⚡ Vijay Electronics</div>
+      <p style="margin-top:12px;font-size:14px;line-height:1.7;">Your trusted electronics partner in Mukerian, Punjab for over 20 years. Best prices, genuine products, expert advice.</p>
+      <p style="margin-top:16px;font-size:14px;">📍 Railway Road, Mukerian, Punjab – 144211</p>
+      <p style="font-size:14px;">📞 <a href="tel:+919876898832" style="color:#9ca3af;">+91 9876898832</a></p>
+      <p style="font-size:14px;">✉️ <a href="mailto:call@suryxnsh.in" style="color:#9ca3af;">call@suryxnsh.in</a></p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#products">All Products</a></li>
+        <li><a href="pages/cart.html">My Cart</a></li>
+        <li><a href="pages/admin.html">Admin Panel</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="#">Televisions</a></li>
+        <li><a href="#">Air Conditioners</a></li>
+        <li><a href="#">Refrigerators</a></li>
+        <li><a href="#">Washing Machines</a></li>
+        <li><a href="#">Kitchen Appliances</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>We Accept</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+        <span style="background:#1f1f2e;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;color:#9ca3af;">UPI</span>
+        <span style="background:#1f1f2e;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;color:#9ca3af;">GPay</span>
+        <span style="background:#1f1f2e;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;color:#9ca3af;">PhonePe</span>
+        <span style="background:#1f1f2e;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;color:#9ca3af;">Paytm</span>
+        <span style="background:#1f1f2e;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;color:#9ca3af;">Cash</span>
+      </div>
+      <h4 style="margin-top:24px;">Working Hours</h4>
+      <p style="font-size:13px;line-height:1.8;">Mon–Sat: 9:00 AM – 9:00 PM<br>Sunday: 10:00 AM – 7:00 PM</p>
+    </div>
+  </div>
+  <div class="ve-footer-bottom">
+    <span>© 2024 Vijay Electronics, Mukerian. All rights reserved.</span>
+    <span>Made with ❤️ in Punjab, India</span>
+  </div>
+</footer>
+
+<!-- ── PRODUCT DETAIL MODAL ── -->
+<div class="ve-modal-overlay" id="productModal">
+  <div class="ve-modal" style="max-width:760px">
+    <div class="ve-modal-header">
+      <h3 id="modalProductName">Product Details</h3>
+      <button class="ve-modal-close" onclick="closeModal('productModal')">✕</button>
+    </div>
+    <div class="ve-modal-body">
+      <div class="ve-product-detail-grid" id="modalProductContent"></div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/store.js"></script>
+<script>
+  let currentCategory = "all";
+  let currentSort = "default";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartBadge();
+    renderProducts();
+    initScrollAnimation();
+    window.addEventListener("productsUpdated", renderProducts);
+  });
+
+  function renderProducts(filterCat = null, searchTerm = null) {
+    const cat = filterCat || currentCategory;
+    let products = getProducts();
+
+    if (cat !== "all") products = products.filter(p => p.category === cat);
+    if (searchTerm) products = products.filter(p =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (currentSort === "price-low") products.sort((a,b) => a.price - b.price);
+    else if (currentSort === "price-high") products.sort((a,b) => b.price - a.price);
+    else if (currentSort === "discount") products.sort((a,b) => discount(b.mrp,b.price) - discount(a.mrp,a.price));
+
+    const grid = document.getElementById("productsGrid");
+    const none = document.getElementById("noProducts");
+
+    if (!products.length) { grid.innerHTML = ""; none.style.display = "block"; return; }
+    none.style.display = "none";
+
+    grid.innerHTML = products.map(p => `
+      <div class="ve-product-card fade-in" onclick="openProductModal('${p.id}')">
+        <div class="ve-product-img">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
+          ${p.badge ? `<div class="ve-product-badge">${p.badge}</div>` : ""}
+          ${p.mrp > p.price ? `<div class="ve-product-discount">${discount(p.mrp,p.price)}% OFF</div>` : ""}
+          ${!p.available ? `<div class="ve-product-badge" style="background:#6b7280">Out of Stock</div>` : ""}
+        </div>
+        <div class="ve-product-info">
+          <div class="ve-product-cat">${p.category}</div>
+          <div class="ve-product-name">${p.name}</div>
+          <div class="ve-product-prices">
+            <div class="ve-product-price">${formatPrice(p.price)}</div>
+            ${p.mrp > p.price ? `<div class="ve-product-mrp">${formatPrice(p.mrp)}</div>` : ""}
+          </div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:10px;">Stock: ${p.qty > 0 ? `${p.qty} units` : '<span style="color:#ef4444">Out of Stock</span>'}</div>
+          <div class="ve-product-actions" onclick="event.stopPropagation()">
+            ${p.available && p.qty > 0
+              ? `<button class="btn-cart" onclick="addToCart('${p.id}')">🛒 Add to Cart</button>
+                 <button class="btn-buy" onclick="buyNow('${p.id}')">⚡ Buy Now</button>`
+              : `<button class="btn-unavailable">❌ Unavailable</button>`
+            }
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function filterCategory(cat, el) {
+    currentCategory = cat;
+    document.querySelectorAll(".ve-catlink").forEach(a => a.classList.remove("active"));
+    if (el) el.classList.add("active");
+    document.getElementById("productsTitle").textContent = cat === "all" ? "All Products" : cat;
+    renderProducts();
+    document.getElementById("products").scrollIntoView({behavior:"smooth",block:"start"});
+    return false;
+  }
+
+  function sortProducts() {
+    currentSort = document.getElementById("sortSelect").value;
+    renderProducts();
+  }
+
+  function openProductModal(id) {
+    const p = getProducts().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById("modalProductName").textContent = p.name;
+    document.getElementById("modalProductContent").innerHTML = `
+      <div class="ve-product-detail-img">
+        <img src="${p.image}" alt="${p.name}" />
+      </div>
+      <div>
+        <div class="ve-product-cat" style="margin-bottom:8px">${p.category}</div>
+        <p style="color:#6b7280;font-size:14px;line-height:1.7;margin-bottom:16px">${p.description}</p>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
+          <span style="font-size:28px;font-weight:800;color:#e63312;font-family:Rajdhani,sans-serif">${formatPrice(p.price)}</span>
+          ${p.mrp > p.price ? `<span style="text-decoration:line-through;color:#9ca3af">${formatPrice(p.mrp)}</span>
+          <span style="background:#d1fae5;color:#065f46;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700">${discount(p.mrp,p.price)}% OFF</span>` : ""}
+        </div>
+        <div style="margin-bottom:16px;font-size:14px">
+          Status: ${p.available && p.qty > 0
+            ? `<span style="color:#10b981;font-weight:700">✅ In Stock (${p.qty} units)</span>`
+            : `<span style="color:#ef4444;font-weight:700">❌ Out of Stock</span>`}
+        </div>
+        <h4 style="margin-bottom:8px">Key Specifications</h4>
+        <ul class="ve-specs-list">${(p.specs||[]).map(s=>`<li>${s}</li>`).join("")}</ul>
+        <div style="display:flex;gap:10px;margin-top:20px">
+          ${p.available && p.qty > 0 ? `
+            <button class="btn-primary" onclick="addToCart('${p.id}');closeModal('productModal')">🛒 Add to Cart</button>
+            <button class="btn-primary" style="background:#1a1a2e" onclick="buyNow('${p.id}')">⚡ Buy Now</button>
+          ` : `<button class="btn-unavailable" style="flex:1">Out of Stock</button>`}
+        </div>
+      </div>
+    `;
+    document.getElementById("productModal").classList.add("open");
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove("open");
+  }
+
+  function buyNow(id) {
+    addToCart(id, 1);
+    window.location.href = "pages/cart.html";
+  }
+
+  // Search
+  document.getElementById("searchInput").addEventListener("input", function() {
+    const q = this.value.trim();
+    const dd = document.getElementById("searchDropdown");
+    if (!q) { dd.style.display = "none"; return; }
+    const results = getProducts().filter(p =>
+      p.name.toLowerCase().includes(q.toLowerCase()) || p.category.toLowerCase().includes(q.toLowerCase())
+    ).slice(0, 5);
+    if (!results.length) { dd.style.display = "none"; return; }
+    dd.innerHTML = results.map(p => `
+      <div class="search-result-item" onclick="openProductModal('${p.id}');document.getElementById('searchDropdown').style.display='none'">
+        <img src="${p.image}" alt="${p.name}" />
+        <div>
+          <div class="search-result-item-name">${p.name}</div>
+          <div class="search-result-item-price">${formatPrice(p.price)}</div>
+        </div>
+      </div>
+    `).join("");
+    dd.style.display = "block";
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!document.getElementById("searchWrap").contains(e.target)) {
+      document.getElementById("searchDropdown").style.display = "none";
+    }
+  });
+
+  function doSearch() {
+    const q = document.getElementById("searchInput").value.trim();
+    if (q) {
+      currentCategory = "all";
+      renderProducts(null, q);
+      document.getElementById("productsTitle").textContent = `Search: "${q}"`;
+      document.getElementById("products").scrollIntoView({behavior:"smooth"});
+      document.getElementById("searchDropdown").style.display = "none";
+    }
+  }
+
+  document.getElementById("searchInput").addEventListener("keypress", e => {
+    if (e.key === "Enter") doSearch();
+  });
+
+  // Scroll animation
+  function initScrollAnimation() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll(".page-section").forEach(s => obs.observe(s));
+  }
+
+  // Hero image rotator
+  const heroImgs = [
+    "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400&q=80",
+    "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&q=80",
+    "https://images.unsplash.com/photo-1631545806609-5b9fbb97c3f1?w=400&q=80"
+  ];
+  let heroIdx = 0;
+  setInterval(() => {
+    heroIdx = (heroIdx + 1) % heroImgs.length;
+    const img = document.getElementById("heroImg");
+    if (img) { img.style.opacity = "0"; setTimeout(() => { img.src = heroImgs[heroIdx]; img.style.opacity = "1"; }, 300); }
+  }, 4000);
+</script>
+</body>
+</html>
