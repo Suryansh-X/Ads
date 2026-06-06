@@ -41,6 +41,14 @@
       padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
       margin-bottom: 16px; display: none;
     }
+    .login-success {
+      background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46;
+      padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      margin-bottom: 16px; display: none;
+    }
+    .login-loading {
+      display: none; text-align: center; color: #9ca3af; font-size: 14px;
+    }
     .login-footer { text-align: center; margin-top: 24px; font-size: 13px; color: #9ca3af; }
   </style>
 </head>
@@ -54,7 +62,16 @@
       <p>Vijay Electronics · Mukerian</p>
     </div>
 
-    <div class="login-error" id="loginError">❌ Incorrect password. Please try again.</div>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-success" id="loginSuccess"></div>
+    <div class="login-loading" id="loginLoading">⏳ Verifying credentials...</div>
+
+    <div class="ve-form-group">
+      <label>Admin Email</label>
+      <input type="email" id="emailInput" class="email-input"
+        placeholder="admin@vijayelectronics.in"
+        onkeypress="if(event.key==='Enter')doLogin()" autocomplete="email" />
+    </div>
 
     <div class="ve-form-group">
       <label>Admin Password</label>
@@ -66,14 +83,15 @@
       </div>
     </div>
 
-    <button class="btn-primary" style="width:100%;justify-content:center;font-size:16px;margin-top:4px" onclick="doLogin()">
+    <button class="btn-primary" style="width:100%;justify-content:center;font-size:16px;margin-top:4px" onclick="doLogin()" id="loginBtn">
       🔓 Login to Admin Panel
     </button>
 
-    <div class="login-divider"><span>secure access</span></div>
+    <div class="login-divider"><span>secure backend authentication</span></div>
 
     <div style="background:#f8f9fa;border-radius:10px;padding:14px;font-size:13px;color:#6b7280;line-height:1.7">
       🛡️ This panel is for <strong>Vijay Electronics</strong> staff only.<br>
+      ✅ Powered by JWT authentication<br>
       Manage products, view orders & generate invoices.
     </div>
 
@@ -83,27 +101,12 @@
   </div>
 </div>
 
-<script src="../assets/js/store.js"></script>
 <script>
-  // Redirect if already logged in
-  if (isAdminLoggedIn()) window.location.href = "admin.html";
+  const API_URL = window.location.origin; // Use current domain
 
-  function doLogin() {
-    const pw = document.getElementById("pwInput").value;
-    const err = document.getElementById("loginError");
-    if (pw === STORE.adminPassword) {
-      sessionStorage.setItem("ve_admin", "true");
-      window.location.href = "admin.html";
-    } else {
-      err.style.display = "block";
-      document.getElementById("pwInput").value = "";
-      document.getElementById("pwInput").focus();
-      document.getElementById("pwInput").style.borderColor = "#ef4444";
-      setTimeout(() => {
-        err.style.display = "none";
-        document.getElementById("pwInput").style.borderColor = "";
-      }, 3000);
-    }
+  // Redirect if already logged in
+  if (localStorage.getItem('adminToken')) {
+    verifyTokenAndRedirect();
   }
 
   function togglePw() {
@@ -111,6 +114,106 @@
     const btn = document.getElementById("pwToggle");
     if (inp.type === "password") { inp.type = "text"; btn.textContent = "🙈"; }
     else { inp.type = "password"; btn.textContent = "👁️"; }
+  }
+
+  async function doLogin() {
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("pwInput").value;
+    const errorEl = document.getElementById("loginError");
+    const successEl = document.getElementById("loginSuccess");
+    const loadingEl = document.getElementById("loginLoading");
+    const loginBtn = document.getElementById("loginBtn");
+
+    // Validation
+    if (!email || !password) {
+      showError("Email and password are required");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      showError("Please enter a valid email");
+      return;
+    }
+
+    try {
+      loadingEl.style.display = "block";
+      errorEl.style.display = "none";
+      successEl.style.display = "none";
+      loginBtn.disabled = true;
+
+      // Call backend API
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+
+      if (data.success && data.token) {
+        // Save token to localStorage
+        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem('adminEmail', email);
+        localStorage.setItem('tokenExpiry', Date.now() + (data.expiresIn * 1000));
+
+        showSuccess("✅ Login successful! Redirecting...");
+        setTimeout(() => {
+          window.location.href = "admin.html";
+        }, 1500);
+      } else {
+        throw new Error('Invalid response from server');
+      }
+
+    } catch (err) {
+      console.error('Login error:', err);
+      showError(`❌ ${err.message}`);
+      document.getElementById("pwInput").value = "";
+      document.getElementById("pwInput").focus();
+    } finally {
+      loadingEl.style.display = "none";
+      loginBtn.disabled = false;
+    }
+  }
+
+  function showError(msg) {
+    const errorEl = document.getElementById("loginError");
+    errorEl.textContent = msg;
+    errorEl.style.display = "block";
+    setTimeout(() => {
+      errorEl.style.display = "none";
+    }, 5000);
+  }
+
+  function showSuccess(msg) {
+    const successEl = document.getElementById("loginSuccess");
+    successEl.textContent = msg;
+    successEl.style.display = "block";
+  }
+
+  async function verifyTokenAndRedirect() {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/api/auth/verify`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        window.location.href = "admin.html";
+      } else {
+        localStorage.removeItem('adminToken');
+      }
+    } catch (err) {
+      console.error('Token verification failed:', err);
+      localStorage.removeItem('adminToken');
+    }
   }
 </script>
 </body>
