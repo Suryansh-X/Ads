@@ -46,10 +46,20 @@
       padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
       margin-bottom: 16px; display: none;
     }
-    .login-loading {
-      display: none; text-align: center; color: #9ca3af; font-size: 14px;
-    }
     .login-footer { text-align: center; margin-top: 24px; font-size: 13px; color: #9ca3af; }
+    .login-loading { display: none; text-align: center; padding: 20px; }
+    .spinner {
+      border: 3px solid #e5e7eb;
+      border-top: 3px solid #e63312;
+      border-radius: 50%;
+      width: 24px; height: 24px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -62,36 +72,41 @@
       <p>Vijay Electronics · Mukerian</p>
     </div>
 
-    <div class="login-error" id="loginError"></div>
-    <div class="login-success" id="loginSuccess"></div>
-    <div class="login-loading" id="loginLoading">⏳ Verifying credentials...</div>
+    <div class="login-error" id="loginError">❌ <span id="errorMsg">Invalid credentials</span></div>
+    <div class="login-success" id="loginSuccess">✅ Login successful! Redirecting...</div>
 
-    <div class="ve-form-group">
-      <label>Admin Email</label>
-      <input type="email" id="emailInput" class="email-input"
-        placeholder="admin@vijayelectronics.in"
-        onkeypress="if(event.key==='Enter')doLogin()" autocomplete="email" />
-    </div>
-
-    <div class="ve-form-group">
-      <label>Admin Password</label>
-      <div class="pw-wrap">
-        <input type="password" id="pwInput" class="pw-input"
-          placeholder="Enter admin password"
-          onkeypress="if(event.key==='Enter')doLogin()" autocomplete="current-password" />
-        <button class="pw-toggle" type="button" onclick="togglePw()" id="pwToggle">👁️</button>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="ve-form-group">
+        <label>Admin Email</label>
+        <input type="email" id="emailInput" class="email-input"
+          placeholder="admin@vijayelectronics.in"
+          required autocomplete="email" />
       </div>
+
+      <div class="ve-form-group">
+        <label>Admin Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="pwInput" class="pw-input"
+            placeholder="Enter admin password"
+            required autocomplete="current-password" />
+          <button class="pw-toggle" type="button" onclick="togglePw()" id="pwToggle">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:16px;margin-top:4px" id="loginBtn">
+        🔓 Login to Admin Panel
+      </button>
+    </form>
+
+    <div class="login-loading" id="loginLoading">
+      <div class="spinner"></div>
+      <p style="margin-top: 12px; color: #6b7280; font-size: 14px;">Verifying credentials...</p>
     </div>
 
-    <button class="btn-primary" style="width:100%;justify-content:center;font-size:16px;margin-top:4px" onclick="doLogin()" id="loginBtn">
-      🔓 Login to Admin Panel
-    </button>
-
-    <div class="login-divider"><span>secure backend authentication</span></div>
+    <div class="login-divider"><span>secure access</span></div>
 
     <div style="background:#f8f9fa;border-radius:10px;padding:14px;font-size:13px;color:#6b7280;line-height:1.7">
       🛡️ This panel is for <strong>Vijay Electronics</strong> staff only.<br>
-      ✅ Powered by JWT authentication<br>
       Manage products, view orders & generate invoices.
     </div>
 
@@ -102,117 +117,74 @@
 </div>
 
 <script>
-  const API_URL = window.location.origin; // Use current domain
+  const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000'
+    : window.location.origin;
 
   // Redirect if already logged in
   if (localStorage.getItem('adminToken')) {
-    verifyTokenAndRedirect();
+    window.location.href = 'admin.html';
   }
 
   function togglePw() {
-    const inp = document.getElementById("pwInput");
-    const btn = document.getElementById("pwToggle");
-    if (inp.type === "password") { inp.type = "text"; btn.textContent = "🙈"; }
-    else { inp.type = "password"; btn.textContent = "👁️"; }
+    const inp = document.getElementById('pwInput');
+    const btn = document.getElementById('pwToggle');
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+    else { inp.type = 'password'; btn.textContent = '👁️'; }
   }
 
-  async function doLogin() {
-    const email = document.getElementById("emailInput").value.trim();
-    const password = document.getElementById("pwInput").value;
-    const errorEl = document.getElementById("loginError");
-    const successEl = document.getElementById("loginSuccess");
-    const loadingEl = document.getElementById("loginLoading");
-    const loginBtn = document.getElementById("loginBtn");
+  async function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('pwInput').value;
+    const errorEl = document.getElementById('loginError');
+    const successEl = document.getElementById('loginSuccess');
+    const loadingEl = document.getElementById('loginLoading');
+    const formEl = document.getElementById('loginForm');
+    const btnEl = document.getElementById('loginBtn');
 
-    // Validation
-    if (!email || !password) {
-      showError("Email and password are required");
-      return;
-    }
-
-    if (!email.includes("@")) {
-      showError("Please enter a valid email");
-      return;
-    }
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+    formEl.style.display = 'none';
+    loadingEl.style.display = 'block';
+    btnEl.disabled = true;
 
     try {
-      loadingEl.style.display = "block";
-      errorEl.style.display = "none";
-      successEl.style.display = "none";
-      loginBtn.disabled = true;
-
-      // Call backend API
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
-      }
-
-      if (data.success && data.token) {
-        // Save token to localStorage
+      if (response.ok && data.token) {
         localStorage.setItem('adminToken', data.token);
         localStorage.setItem('adminEmail', email);
-        localStorage.setItem('tokenExpiry', Date.now() + (data.expiresIn * 1000));
-
-        showSuccess("✅ Login successful! Redirecting...");
+        successEl.style.display = 'block';
         setTimeout(() => {
-          window.location.href = "admin.html";
+          window.location.href = 'admin.html';
         }, 1500);
       } else {
-        throw new Error('Invalid response from server');
+        document.getElementById('errorMsg').textContent = data.error || 'Invalid credentials';
+        errorEl.style.display = 'block';
+        formEl.style.display = 'block';
+        loadingEl.style.display = 'none';
+        document.getElementById('pwInput').value = '';
+        document.getElementById('pwInput').focus();
+        setTimeout(() => {
+          errorEl.style.display = 'none';
+        }, 4000);
       }
-
     } catch (err) {
       console.error('Login error:', err);
-      showError(`❌ ${err.message}`);
-      document.getElementById("pwInput").value = "";
-      document.getElementById("pwInput").focus();
+      document.getElementById('errorMsg').textContent = 'Connection error. Check your internet.';
+      errorEl.style.display = 'block';
+      formEl.style.display = 'block';
+      loadingEl.style.display = 'none';
     } finally {
-      loadingEl.style.display = "none";
-      loginBtn.disabled = false;
-    }
-  }
-
-  function showError(msg) {
-    const errorEl = document.getElementById("loginError");
-    errorEl.textContent = msg;
-    errorEl.style.display = "block";
-    setTimeout(() => {
-      errorEl.style.display = "none";
-    }, 5000);
-  }
-
-  function showSuccess(msg) {
-    const successEl = document.getElementById("loginSuccess");
-    successEl.textContent = msg;
-    successEl.style.display = "block";
-  }
-
-  async function verifyTokenAndRedirect() {
-    try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_URL}/api/auth/verify`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        window.location.href = "admin.html";
-      } else {
-        localStorage.removeItem('adminToken');
-      }
-    } catch (err) {
-      console.error('Token verification failed:', err);
-      localStorage.removeItem('adminToken');
+      btnEl.disabled = false;
     }
   }
 </script>
